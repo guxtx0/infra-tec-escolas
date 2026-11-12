@@ -1,0 +1,44 @@
+table Ano
+	lineageTag: 468ed0dc-9dc6-545e-abd7-d83681c46041
+
+	column Ano
+		dataType: int64
+		isKey
+		formatString: 0
+		lineageTag: 9478acfa-8031-5a44-8f07-2add7d23f0fc
+		summarizeBy: none
+		sourceColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Ano (texto)'
+		dataType: string
+		lineageTag: 956642f4-9bac-5e50-a7e0-07d5333e440d
+		summarizeBy: none
+		sourceColumn: Ano (texto)
+		sortByColumn: Ano
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Ano = m
+		mode: import
+		source =
+				let
+				    // Lê o CSV da pasta indicada em PastaDados. Se a pasta não for encontrada,
+				    // usa a cópia da amostra guardada dentro do projeto (o relatório avisa na tela).
+				    Arquivo =
+				        try Binary.Buffer(File.Contents(PastaDados & "dim_ano.csv"))
+				        otherwise Binary.Decompress(Binary.FromText("FcYhEgAgCADB7lsIgBZf4xCsUAw+X6/sbGRJZK2z76nmalPgz02AOXM22GDKlHXW2wM=", BinaryEncoding.Base64), Compression.Deflate),
+				    Fonte = Csv.Document(
+				        Arquivo,
+				        [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    Cabecalhos = Table.PromoteHeaders(Fonte, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Cabecalhos, {
+				    {"ano", Int64.Type},
+				    {"ano_texto", type text}
+				    }, "en-US"),
+				    Renomeadas = Table.RenameColumns(Tipos, {{"ano", "Ano"}, {"ano_texto", "Ano (texto)"}})
+				in
+				    Renomeadas
+

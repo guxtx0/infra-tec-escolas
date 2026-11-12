@@ -1,0 +1,60 @@
+table Metadados
+	isHidden
+	lineageTag: d4ad2110-ccbc-5805-90b0-8fda57ced8bf
+
+	column fonte
+		dataType: string
+		lineageTag: 7731927b-3985-5a6d-bcbd-8cfff5318238
+		summarizeBy: none
+		sourceColumn: fonte
+
+		annotation SummarizationSetBy = Automatic
+
+	column uf
+		dataType: string
+		lineageTag: 2c82f006-ccac-5dd9-9145-46cdadba1cf6
+		summarizeBy: none
+		sourceColumn: uf
+
+		annotation SummarizationSetBy = Automatic
+
+	column anos
+		dataType: string
+		lineageTag: 506dfa35-b7c9-5824-99c6-0f44b9593bb6
+		summarizeBy: none
+		sourceColumn: anos
+
+		annotation SummarizationSetBy = Automatic
+
+	column eh_amostra
+		dataType: int64
+		formatString: 0
+		lineageTag: 87466c1b-a094-5f53-868d-10aee8d149e8
+		summarizeBy: none
+		sourceColumn: eh_amostra
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Metadados = m
+		mode: import
+		source =
+				let
+				    // Lê o CSV da pasta indicada em PastaDados. Se a pasta não for encontrada,
+				    // usa a cópia da amostra guardada dentro do projeto (o relatório avisa na tela).
+				    Arquivo =
+				        try Binary.Buffer(File.Contents(PastaDados & "metadados.csv"))
+				        otherwise Binary.Decompress(Binary.FromText("Hcs7DsIwEEXRPqsYpQJpisSioYYIURCxAzTyR1jCfmhsVpSCilV4YxC6W5wbkKvnV2DJKOzvN0koVaXrj+JQKERb28fGXz5FhZxPyCto77aAKYMCNEkFrTxFq3D/04EOPhfQVCweorQ5z9N12/PlxGYY9yRkBrPjsfsC", BinaryEncoding.Base64), Compression.Deflate),
+				    Fonte = Csv.Document(
+				        Arquivo,
+				        [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    Cabecalhos = Table.PromoteHeaders(Fonte, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Cabecalhos, {
+				    {"fonte", type text},
+				    {"uf", type text},
+				    {"anos", type text},
+				    {"eh_amostra", Int64.Type}
+				    }, "en-US")
+				in
+				    Tipos
+

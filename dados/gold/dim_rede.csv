@@ -1,0 +1,5 @@
+id_rede,rede,grupo_rede,ordem_rede
+3,Municipal,Pública,1
+2,Estadual,Pública,2
+1,Federal,Pública,3
+4,Privada,Privada,4

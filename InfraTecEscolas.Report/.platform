@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "InfraTecEscolas"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a3c5e2d4-8b1f-4e6a-9c2d-7f3e1b5a9d02"
+  }
+}

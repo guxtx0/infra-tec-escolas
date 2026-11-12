@@ -1,0 +1,71 @@
+table 'Município'
+	lineageTag: 9ce736ae-bdfd-5158-8911-65d96ad4331d
+
+	column co_municipio
+		dataType: int64
+		isHidden
+		isKey
+		formatString: 0
+		lineageTag: 8e38d6f2-57d2-5776-81c3-544c1947d873
+		summarizeBy: none
+		sourceColumn: co_municipio
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Município'
+		dataType: string
+		lineageTag: 0ceb62fd-38e9-5811-9294-71f709d5b269
+		summarizeBy: none
+		sourceColumn: Município
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Mesorregião'
+		dataType: string
+		lineageTag: 8cb7cca5-47ac-5343-8389-5ef950f2b498
+		summarizeBy: none
+		sourceColumn: Mesorregião
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Microrregião'
+		dataType: string
+		lineageTag: 6cb94ecb-1a70-5e60-a6c6-b57469598c7f
+		summarizeBy: none
+		sourceColumn: Microrregião
+
+		annotation SummarizationSetBy = Automatic
+
+	column UF
+		dataType: string
+		lineageTag: 8349234f-03fe-5616-b7d6-7ce6b0e91268
+		summarizeBy: none
+		sourceColumn: UF
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Município' = m
+		mode: import
+		source =
+				let
+				    // Lê o CSV da pasta indicada em PastaDados. Se a pasta não for encontrada,
+				    // usa a cópia da amostra guardada dentro do projeto (o relatório avisa na tela).
+				    Arquivo =
+				        try Binary.Buffer(File.Contents(PastaDados & "dim_municipio.csv"))
+				        otherwise Binary.Decompress(Binary.FromText("lZXBSsNAEIbvPsU+QMDuztQ2V1H0Ug9WPHiRkG7LQtotaQI+j3efoi/mBDW0+NOdvYTdj5kl/Hzw1/F92+9CHfYhFicnf4ht6zehknOo2/HSr6/IluVkYovFMH38knFz/+G3+yYaocu+uV72q+gPnT+/LB5+Vx1cdcVLG46fu03fxNPjuEZwjYq3uKvMqjKLqqvOL+Mqw1UunmIrP/bzHYencHhavFaNN6tongXfxdr/B+MTN/AJob5r4z42oauG3/Tm9hGzv4dm8KGZJuU5XJ2nUi7hWqlI2U7QqlCUsoX+CNWnbKFHA81M2UKzhKZTttAsoZdTttAxoYqUoVtCYcrQH6EZKUOPBpqbMjRLaDplB80SejllBx0Tmk7ZQbeEopQd9EeoPmUHPRpoZsoOmiVUkTI0S2giZeiYUEXK0C2hMGXoj1B9ygQ9GmhmygTNIk37ETSLUu1H0DHStB9Btwi3H0F/KKf9CHpE+e1H0CzStB9BsyjVfgQdI037MXSLcfsx9Idz2o+hR5zffgzNYk37MTSLU+3H0DHWtB9Dtxi3H0N/OKf9GHrEWe33DQ==", BinaryEncoding.Base64), Compression.Deflate),
+				    Fonte = Csv.Document(
+				        Arquivo,
+				        [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    Cabecalhos = Table.PromoteHeaders(Fonte, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Cabecalhos, {
+				    {"co_municipio", Int64.Type},
+				    {"municipio", type text},
+				    {"mesorregiao", type text},
+				    {"microrregiao", type text},
+				    {"uf", type text}
+				    }, "en-US"),
+				    Renomeadas = Table.RenameColumns(Tipos, {{"municipio", "Município"}, {"mesorregiao", "Mesorregião"}, {"microrregiao", "Microrregião"}, {"uf", "UF"}})
+				in
+				    Renomeadas
+

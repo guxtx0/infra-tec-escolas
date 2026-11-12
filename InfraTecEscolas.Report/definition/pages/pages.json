@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "p1_visao_geral",
+    "p2_indicadores",
+    "p3_publico_privado",
+    "p4_municipios",
+    "p5_sobre"
+  ],
+  "activePageName": "p1_visao_geral"
+}

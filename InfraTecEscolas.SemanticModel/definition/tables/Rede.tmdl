@@ -1,0 +1,65 @@
+table Rede
+	lineageTag: dc766cea-fa41-5ed6-a5b7-5437dd0053c5
+
+	column id_rede
+		dataType: int64
+		isHidden
+		isKey
+		formatString: 0
+		lineageTag: 70508cd4-84ce-5429-bb1f-0fc1288ae80a
+		summarizeBy: none
+		sourceColumn: id_rede
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rede
+		dataType: string
+		lineageTag: 12d62711-d49e-522c-9b39-aaaf1b150f40
+		summarizeBy: none
+		sourceColumn: Rede
+		sortByColumn: Ordem
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Grupo de rede'
+		dataType: string
+		lineageTag: 2191b719-07ef-5bc9-9dd4-76ec1df1a0e1
+		summarizeBy: none
+		sourceColumn: Grupo de rede
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ordem
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: c624ecc7-68db-5b72-8acf-b2dcb8f4a5c4
+		summarizeBy: none
+		sourceColumn: Ordem
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Rede = m
+		mode: import
+		source =
+				let
+				    // Lê o CSV da pasta indicada em PastaDados. Se a pasta não for encontrada,
+				    // usa a cópia da amostra guardada dentro do projeto (o relatório avisa na tela).
+				    Arquivo =
+				        try Binary.Buffer(File.Contents(PastaDados & "dim_rede.csv"))
+				        otherwise Binary.Decompress(Binary.FromText("y0yJL0pNSdUBE+lFpQX5EH5+UUpqLpjJZazjW5qXmZxZkJijE3B4V1JOZnKijiGXkY5rcUliSimyqBGXoY4bUE8RsqAxl4lOQFFmWWJKIpw24QIA", BinaryEncoding.Base64), Compression.Deflate),
+				    Fonte = Csv.Document(
+				        Arquivo,
+				        [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    Cabecalhos = Table.PromoteHeaders(Fonte, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Cabecalhos, {
+				    {"id_rede", Int64.Type},
+				    {"rede", type text},
+				    {"grupo_rede", type text},
+				    {"ordem_rede", Int64.Type}
+				    }, "en-US"),
+				    Renomeadas = Table.RenameColumns(Tipos, {{"rede", "Rede"}, {"grupo_rede", "Grupo de rede"}, {"ordem_rede", "Ordem"}})
+				in
+				    Renomeadas
+

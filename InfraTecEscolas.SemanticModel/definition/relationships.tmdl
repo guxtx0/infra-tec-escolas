@@ -1,0 +1,20 @@
+relationship 3e730b9f-2c55-5e51-bf97-ad21705cf43e
+	fromColumn: 'Fato Infraestrutura'.ano
+	toColumn: Ano.Ano
+
+relationship a4e4e9f8-b115-5a96-9959-580f73e25ac2
+	fromColumn: 'Fato Infraestrutura'.id_rede
+	toColumn: Rede.id_rede
+
+relationship d975b123-0962-5133-96b1-27c2f896d568
+	fromColumn: 'Fato Infraestrutura'.id_localizacao
+	toColumn: 'Localização'.id_localizacao
+
+relationship 77d79db3-ef23-56a4-a61a-25651f0f1f7d
+	fromColumn: 'Fato Infraestrutura'.co_municipio
+	toColumn: 'Município'.co_municipio
+
+relationship 6305b276-2628-5b3b-8164-692822631e0e
+	fromColumn: 'Fato Infraestrutura'.co_entidade
+	toColumn: Escola.'Código INEP'
+

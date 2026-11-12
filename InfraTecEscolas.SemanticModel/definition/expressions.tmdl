@@ -1,0 +1,6 @@
+/// Pasta com os CSVs da camada gold (termina com \). O pipeline preenche este caminho automaticamente.
+expression PastaDados = "C:\infra-tec-escolas\dados\gold\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 176ae140-63d4-53ad-8f9a-2bd595241d00
+
+	annotation PBI_ResultType = Text
+

@@ -1,0 +1,13 @@
+Title,Body,Labels,Status
+"Baixar microdados do Censo automaticamente","Zips em dados/raw/ com mensagem clara quando o download falha","ingestao;sprint-1","Done"
+"Camada bronze em Parquet","Parquet por ano com arquivo de origem e ordem de carga","ingestao;sprint-1","Done"
+"Amostra sintética para testes","--amostra gera arquivos no formato do INEP","ingestao;sprint-1","Done"
+"Camada silver","Tipagem, filtro de UF e deduplicação com QUALIFY","sql;sprint-2","Done"
+"Modelo estrela no DW","Fato escola x ano e 5 dimensões","modelagem;sprint-2","Done"
+"Índice de Infraestrutura Tecnológica","Pesos documentados, 0 a 100","regra-de-negocio;sprint-2","Done"
+"Data marts e consultas analíticas","5 consultas que respondem à pergunta","sql;sprint-2","Done"
+"Pipeline no Databricks","Notebook com Delta e Unity Catalog","databricks;sprint-2","Done"
+"Relatório Power BI","5 páginas com tema Lousa Digital","power-bi;sprint-3","Done"
+"Medidas DAX","Ano anterior, variação, ranking e texto automático","power-bi;sprint-3","Done"
+"Planilha Excel","Tabela dinâmica, busca com dois critérios e gráfico","excel;sprint-3","Done"
+"Publicar no GitHub e LinkedIn","README com prints e post com 3 conclusões","divulgacao;sprint-3","Todo"

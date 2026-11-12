@@ -1,0 +1,56 @@
+table 'Localização'
+	lineageTag: cbc63fca-f2f5-5de1-a35b-a151d45ce347
+
+	column id_localizacao
+		dataType: int64
+		isHidden
+		isKey
+		formatString: 0
+		lineageTag: f9024aae-fa0f-5684-ae7a-4d5077a0cd13
+		summarizeBy: none
+		sourceColumn: id_localizacao
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Localização'
+		dataType: string
+		lineageTag: d7228f90-900f-52d8-a402-5a2998f5907f
+		summarizeBy: none
+		sourceColumn: Localização
+		sortByColumn: Ordem
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ordem
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cf649294-6e99-5aa8-a521-97ab9a2e1019
+		summarizeBy: none
+		sourceColumn: Ordem
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Localização' = m
+		mode: import
+		source =
+				let
+				    // Lê o CSV da pasta indicada em PastaDados. Se a pasta não for encontrada,
+				    // usa a cópia da amostra guardada dentro do projeto (o relatório avisa na tela).
+				    Arquivo =
+				        try Binary.Buffer(File.Contents(PastaDados & "dim_localizacao.csv"))
+				        otherwise Binary.Decompress(Binary.FromText("y0yJz8lPTszJrEpMTszXQWbnF6Wk5iLLchnqhBYlJeYl6hhyGekElRYl5ugYcQEA", BinaryEncoding.Base64), Compression.Deflate),
+				    Fonte = Csv.Document(
+				        Arquivo,
+				        [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]
+				    ),
+				    Cabecalhos = Table.PromoteHeaders(Fonte, [PromoteAllScalars = true]),
+				    Tipos = Table.TransformColumnTypes(Cabecalhos, {
+				    {"id_localizacao", Int64.Type},
+				    {"localizacao", type text},
+				    {"ordem_localizacao", Int64.Type}
+				    }, "en-US"),
+				    Renomeadas = Table.RenameColumns(Tipos, {{"localizacao", "Localização"}, {"ordem_localizacao", "Ordem"}})
+				in
+				    Renomeadas
+

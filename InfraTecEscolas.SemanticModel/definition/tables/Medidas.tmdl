@@ -1,0 +1,246 @@
+table Medidas
+	lineageTag: 4f422eb4-59b2-5cbf-a3a5-9d5e0534c9e0
+
+	/// Escolas em atividade no Censo (uma linha por escola e ano).
+	measure Escolas = COUNTROWS ( 'Fato Infraestrutura' )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 5ed0e9aa-2396-5bc7-ab26-a5300cb19536
+
+	measure 'Matrículas' = SUM ( 'Fato Infraestrutura'[qt_mat_bas] )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: 3ff3f82f-5e5c-537f-89c8-77db90c96cb9
+
+	measure 'Computadores para alunos' = SUM ( 'Fato Infraestrutura'[qt_desktop_aluno] ) + SUM ( 'Fato Infraestrutura'[qt_comp_portatil_aluno] ) + SUM ( 'Fato Infraestrutura'[qt_tablet_aluno] )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: c9b8ded9-b924-5391-b140-228e9ca84896
+
+	/// Matrículas da educação básica divididas pelos computadores, notebooks e tablets de uso dos alunos.
+	measure 'Alunos por computador' = DIVIDE ( [Matrículas], [Computadores para alunos] )
+		formatString: #,0.0
+		displayFolder: 1. Base
+		lineageTag: f3a7469d-592b-5fcd-840c-b98276c78a4b
+
+	/// Média do índice de 0 a 100 calculado na camada gold (pesos em docs/dicionario_de_dados.md).
+	measure 'Índice de infraestrutura tecnológica' = AVERAGE ( 'Fato Infraestrutura'[indice_infra_tec] )
+		formatString: 0.0
+		displayFolder: 1. Base
+		lineageTag: c70e4a80-c3e1-5559-b51e-d09fa2b742ea
+
+	measure 'Escolas com internet' = CALCULATE ( [Escolas], 'Fato Infraestrutura'[in_internet] = 1 )
+		formatString: #,0
+		displayFolder: 1. Base
+		lineageTag: bbb160e8-1ca6-591c-a8e0-2257ccdc78c0
+
+	measure '% com internet' = DIVIDE ( [Escolas com internet], [Escolas] )
+		formatString: 0.0%
+		displayFolder: 2. Indicadores (%)
+		lineageTag: ad0bb4a4-815f-530c-91e9-7017dc7e8967
+
+	measure '% com banda larga' = DIVIDE ( CALCULATE ( [Escolas], 'Fato Infraestrutura'[in_banda_larga] = 1 ), [Escolas] )
+		formatString: 0.0%
+		displayFolder: 2. Indicadores (%)
+		lineageTag: d8d8e804-d906-545a-ab7b-48897dc0d90c
+
+	measure '% com internet para alunos' = DIVIDE ( CALCULATE ( [Escolas], 'Fato Infraestrutura'[in_internet_alunos] = 1 ), [Escolas] )
+		formatString: 0.0%
+		displayFolder: 2. Indicadores (%)
+		lineageTag: bf200cbd-89e2-52cc-b459-3b56e8922df8
+
+	measure '% com internet no ensino' = DIVIDE ( CALCULATE ( [Escolas], 'Fato Infraestrutura'[in_internet_aprendizagem] = 1 ), [Escolas] )
+		formatString: 0.0%
+		displayFolder: 2. Indicadores (%)
+		lineageTag: 1860c3cb-1f29-5717-bc50-d389d602dd06
+
+	measure '% com laboratório de informática' = DIVIDE ( CALCULATE ( [Escolas], 'Fato Infraestrutura'[in_laboratorio_informatica] = 1 ), [Escolas] )
+		formatString: 0.0%
+		displayFolder: 2. Indicadores (%)
+		lineageTag: 4fbad347-133f-55a7-9a98-4ec602281a09
+
+	measure '% com computador para alunos' = DIVIDE ( CALCULATE ( [Escolas], 'Fato Infraestrutura'[in_computador_aluno] = 1 ), [Escolas] )
+		formatString: 0.0%
+		displayFolder: 2. Indicadores (%)
+		lineageTag: 3806efb8-b236-54d3-93cf-dc6646b9cc17
+
+	measure '% com rede sem fio' = DIVIDE ( CALCULATE ( [Escolas], 'Fato Infraestrutura'[in_rede_sem_fio] = 1 ), [Escolas] )
+		formatString: 0.0%
+		displayFolder: 2. Indicadores (%)
+		lineageTag: 09e6141b-5978-5f10-8296-b006b4e0d58f
+
+	/// Último ano no filtro atual. Os cartões mostram esse ano.
+	measure 'Ano de referência' = MAX ( 'Ano'[Ano] )
+		formatString: 0
+		displayFolder: 3. Evolução no tempo
+		lineageTag: 44b8b899-b57f-55fd-bcee-96b8c57890e9
+
+	measure 'Escolas no ano de referência' =
+			VAR _ano = [Ano de referência]
+			RETURN CALCULATE ( [Escolas], 'Ano'[Ano] = _ano )
+		formatString: #,0
+		displayFolder: 3. Evolução no tempo
+		lineageTag: 1522f197-9a7a-5067-85a1-331c15dea137
+
+	measure 'Índice no ano de referência' =
+			VAR _ano = [Ano de referência]
+			RETURN CALCULATE ( [Índice de infraestrutura tecnológica], 'Ano'[Ano] = _ano )
+		formatString: 0.0
+		displayFolder: 3. Evolução no tempo
+		lineageTag: 360225b4-16a7-5256-a85a-d4f581a67eb5
+
+	measure '% com internet no ano de referência' =
+			VAR _ano = [Ano de referência]
+			RETURN CALCULATE ( [% com internet], 'Ano'[Ano] = _ano )
+		formatString: 0.0%
+		displayFolder: 3. Evolução no tempo
+		lineageTag: 0517affa-ab38-53d9-a333-4f1412ab13b0
+
+	measure '% com banda larga no ano de referência' =
+			VAR _ano = [Ano de referência]
+			RETURN CALCULATE ( [% com banda larga], 'Ano'[Ano] = _ano )
+		formatString: 0.0%
+		displayFolder: 3. Evolução no tempo
+		lineageTag: b079fc99-2006-555e-ba2d-e2802cbb18c6
+
+	measure 'Alunos por computador no ano de referência' =
+			VAR _ano = [Ano de referência]
+			RETURN CALCULATE ( [Alunos por computador], 'Ano'[Ano] = _ano )
+		formatString: #,0.0
+		displayFolder: 3. Evolução no tempo
+		lineageTag: e0f24389-bc54-58ed-9a42-c2ac1ce1c457
+
+	measure 'Índice no ano anterior' =
+			VAR _ano = MAX ( 'Ano'[Ano] )
+			RETURN
+			    CALCULATE (
+			        [Índice de infraestrutura tecnológica],
+			        REMOVEFILTERS ( 'Ano' ),
+			        'Ano'[Ano] = _ano - 1
+			    )
+		formatString: 0.0
+		displayFolder: 3. Evolução no tempo
+		lineageTag: c7a2d0e1-a922-50e6-9f9a-54aecd1b7e77
+
+	/// Diferença em pontos do índice em relação ao ano anterior.
+	measure 'Variação do índice vs ano anterior' =
+			VAR _atual = [Índice de infraestrutura tecnológica]
+			VAR _anterior = [Índice no ano anterior]
+			RETURN IF ( NOT ISBLANK ( _atual ) && NOT ISBLANK ( _anterior ), _atual - _anterior )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 3. Evolução no tempo
+		lineageTag: ecaa1772-f3d9-5469-8b8f-74eae07eff7c
+
+	measure 'Variação de % com internet vs ano anterior (p.p.)' =
+			VAR _ano = MAX ( 'Ano'[Ano] )
+			VAR _atual = [% com internet]
+			VAR _anterior =
+			    CALCULATE ( [% com internet], REMOVEFILTERS ( 'Ano' ), 'Ano'[Ano] = _ano - 1 )
+			RETURN IF ( NOT ISBLANK ( _anterior ), 100 * ( _atual - _anterior ) )
+		formatString: +0.0" p.p.";-0.0" p.p.";0.0" p.p."
+		displayFolder: 3. Evolução no tempo
+		lineageTag: a7334897-0371-58aa-afd4-25cdb50dc9ee
+
+	/// Pontos ganhos pelo índice entre o primeiro e o último ano selecionados.
+	measure 'Evolução do índice no período' =
+			VAR _inicio = CALCULATE ( MIN ( 'Ano'[Ano] ), ALLSELECTED ( 'Ano' ) )
+			VAR _fim = CALCULATE ( MAX ( 'Ano'[Ano] ), ALLSELECTED ( 'Ano' ) )
+			VAR _indiceInicio =
+			    CALCULATE ( [Índice de infraestrutura tecnológica], REMOVEFILTERS ( 'Ano' ), 'Ano'[Ano] = _inicio )
+			VAR _indiceFim =
+			    CALCULATE ( [Índice de infraestrutura tecnológica], REMOVEFILTERS ( 'Ano' ), 'Ano'[Ano] = _fim )
+			RETURN IF ( NOT ISBLANK ( _indiceInicio ), _indiceFim - _indiceInicio )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 3. Evolução no tempo
+		lineageTag: da29b6b2-dd81-593c-af62-62098e232d6e
+
+	measure 'Índice da rede pública' = CALCULATE ( [Índice de infraestrutura tecnológica], 'Rede'[Grupo de rede] = "Pública" )
+		formatString: 0.0
+		displayFolder: 4. Público x privado
+		lineageTag: 3adde152-aa61-59b0-846e-771c501de738
+
+	measure 'Índice da rede privada' = CALCULATE ( [Índice de infraestrutura tecnológica], 'Rede'[Grupo de rede] = "Privada" )
+		formatString: 0.0
+		displayFolder: 4. Público x privado
+		lineageTag: 425cd567-84cf-57dd-8174-841e6e24aadd
+
+	/// Quanto a rede privada está à frente da pública no índice. Quanto menor, menor a desigualdade.
+	measure 'Diferença privada x pública (pontos)' = [Índice da rede privada] - [Índice da rede pública]
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 4. Público x privado
+		lineageTag: 50a2aded-b8b8-5992-8d54-09fbe3e547b4
+
+	measure 'Diferença privada x pública em internet (p.p.)' =
+			VAR _privada = CALCULATE ( [% com internet], 'Rede'[Grupo de rede] = "Privada" )
+			VAR _publica = CALCULATE ( [% com internet], 'Rede'[Grupo de rede] = "Pública" )
+			RETURN 100 * ( _privada - _publica )
+		formatString: +0.0" p.p.";-0.0" p.p.";0.0" p.p."
+		displayFolder: 4. Público x privado
+		lineageTag: 0668c5d6-a1eb-5fb4-ae69-96583c9e3f2e
+
+	measure 'Ranking do município' =
+			IF (
+			    ISINSCOPE ( 'Município'[Município] ),
+			    RANKX ( ALLSELECTED ( 'Município'[Município] ), [Índice no ano de referência], , DESC, DENSE )
+			)
+		formatString: 0
+		displayFolder: 5. Textos e rankings
+		lineageTag: af68263c-fba5-5ce8-9e78-ca68436394b1
+
+	/// Texto gerado a partir dos filtros, resumindo a evolução de cada rede.
+	measure 'Resumo automático' =
+			VAR _inicio = CALCULATE ( MIN ( 'Ano'[Ano] ), ALLSELECTED ( 'Ano' ) )
+			VAR _fim = CALCULATE ( MAX ( 'Ano'[Ano] ), ALLSELECTED ( 'Ano' ) )
+			VAR _redes =
+			    FILTER (
+			        SUMMARIZE ( 'Rede', 'Rede'[Rede], 'Rede'[Ordem] ),
+			        NOT ISBLANK ( [Índice de infraestrutura tecnológica] )
+			    )
+			VAR _texto =
+			    CONCATENATEX (
+			        _redes,
+			        VAR _a = CALCULATE ( [Índice de infraestrutura tecnológica], REMOVEFILTERS ( 'Ano' ), 'Ano'[Ano] = _inicio )
+			        VAR _b = CALCULATE ( [Índice de infraestrutura tecnológica], REMOVEFILTERS ( 'Ano' ), 'Ano'[Ano] = _fim )
+			        RETURN
+			            'Rede'[Rede] & ": " & FORMAT ( _a, "0.0" ) & " → " & FORMAT ( _b, "0.0" )
+			                & " (" & FORMAT ( _b - _a, "+0.0;-0.0;0.0" ) & " pontos)",
+			        "   •   ",
+			        'Rede'[Ordem], ASC
+			    )
+			RETURN
+			    "Índice de infraestrutura tecnológica, de " & _inicio & " a " & _fim & ":   " & _texto
+		displayFolder: 5. Textos e rankings
+		lineageTag: 6f0f4050-a423-5daa-85c2-fa7e2fec37f2
+
+	measure 'Aviso de amostra' =
+			IF (
+			    MAX ( 'Metadados'[eh_amostra] ) = 1,
+			    "Dados fictícios para demonstração · estrutura compatível com os microdados do Censo Escolar (INEP)",
+			    ""
+			)
+		displayFolder: 5. Textos e rankings
+		lineageTag: a7b59f8d-4e6e-5838-9f57-d368c93e6d23
+
+	measure 'Texto da fonte' =
+			"Fonte: " & MAX ( 'Metadados'[fonte] ) & "  |  " & MAX ( 'Metadados'[uf] ) & ", "
+			    & MAX ( 'Metadados'[anos] )
+		displayFolder: 5. Textos e rankings
+		lineageTag: d77fc91a-0e11-5d26-9950-36ee49764c35
+
+	column Medida
+		dataType: string
+		isHidden
+		lineageTag: 69c58b5b-3dc0-5286-b263-81f2ba34e979
+		summarizeBy: none
+		sourceColumn: Medida
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Medidas = m
+		mode: import
+		source =
+				let
+				    Fonte = #table(type table [Medida = text], {})
+				in
+				    Fonte
+

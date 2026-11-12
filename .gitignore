@@ -1,0 +1,13 @@
+# dados grandes ou intermediários
+dados/raw/*.zip
+dados/raw/extraido/
+dados/bronze/
+dados/silver/
+dados/*.duckdb
+!dados/raw/AMOSTRA_*.zip
+
+# arquivos locais do Power BI
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+__pycache__/
