@@ -8,7 +8,7 @@ Autor: **Gustavo Oliveira**
 
 > **Sobre os dados:** os números exibidos são **fictícios**, gerados no mesmo formato, com os mesmos nomes de coluna e a mesma codificação dos microdados do INEP, para demonstrar a lógica e as ferramentas. O pipeline já processa os dados reais com um único comando (veja "Como rodar").
 
-📄 **Explicação completa das ferramentas e decisões:** [docs/Ferramentas_e_metodos.pdf](docs/Ferramentas_e_metodos.pdf)
+ **Explicação completa das ferramentas e decisões:** [docs/Ferramentas_e_metodos.pdf](docs/Ferramentas_e_metodos.pdf)
 
 ---
 
